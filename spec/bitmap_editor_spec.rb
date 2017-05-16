@@ -119,6 +119,38 @@ RSpec.describe 'BitmapEditor' do
       expect { bitmap_editor.run(current_path + '/examples/show.txt') }.to output("00000\n00ZZZ\nAW000\n0W000\n0W000\n0W000\n").to_stdout
     end
 
+    it 'normal case - complex' do
+      expected_string = <<-DOC
+00000
+00ZZZ
+AW000
+0W000
+0W000
+0W000
+00000
+00000
+00000
+00000
+00000
+00000
+0V
+00
+V0
+00
+00000000000000000000000000000000000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS0000000000SSS000000000
+0SSSSSSSSSSSS0000000000SSS000000000
+0SSSSSSSSSSSS0000000000SSS000000000
+0SSS000000SSS0000000000SSS000000000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS000000SSSSSSSSSSS00000
+00000000000000000000000000000000000
+      DOC
+      expect { bitmap_editor.run(current_path + '/examples/show-complex.txt') }.to output(expected_string).to_stdout
+    end
+
     it 'error cases' do
       expected_string = <<-DOC
 #NO_Image

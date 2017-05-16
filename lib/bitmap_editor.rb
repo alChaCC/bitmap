@@ -12,17 +12,17 @@ class BitmapEditor
       begin
         line = line.chomp.split(' ')
         case line.first
-        when 'I'
+        when 'I', 'i'
           matrix = create_table(row: line[2].to_i, col: line[1].to_i)
-        when 'C'
+        when 'C', 'c'
           matrix = clear_table(matrix)
-        when 'L'
+        when 'L', 'l'
           matrix = draw_pixel(matrix: matrix, row: line[2].to_i, col: line[1].to_i, color: line[3])
-        when 'V'
+        when 'V', 'v'
           matrix = draw_column(matrix: matrix, col: line[1].to_i, row_start: line[2].to_i, row_end: line[3].to_i, color: line[4])
-        when 'H'
+        when 'H', 'h'
           matrix = draw_row(matrix: matrix, row: line[3].to_i, col_start: line[1].to_i, col_end: line[2].to_i, color: line[4])
-        when 'S'
+        when 'S', 's'
           show_table(matrix)
         else
           puts line.join

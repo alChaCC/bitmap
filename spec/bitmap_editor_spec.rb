@@ -48,4 +48,32 @@ RSpec.describe 'BitmapEditor' do
       end
     end
   end
+
+  describe 'V X Y1 Y2 C - Draw a vertical segment of colour C in column X between rows Y1 and Y2 (inclusive).' do
+    it 'V 2 3 6 W' do
+      expect(bitmap_editor.draw_column(matrix: matrix, col: 2, row_start: 3, row_end: 6, color: 'W')).to eq(Matrix.rows([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, "W", 0, 0, 0], [0, "W", 0, 0, 0], [0, "W", 0, 0, 0], [0, "W", 0, 0, 0]]))
+    end
+
+    context 'raise Exceptions::ValidationError' do
+      it 'when input is not Matrix' do
+        expect { bitmap_editor.draw_column(matrix: [], col: 2, row_start: 3, row_end: 6, color: 'W') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when row_start < 1' do
+        expect { bitmap_editor.draw_column(matrix: matrix, col: 2, row_start: 0, row_end: 6, color: 'W') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when row_end > 6' do
+        expect { bitmap_editor.draw_column(matrix: matrix, col: 2, row_start: 3, row_end: 7, color: 'W') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when color is nil' do
+        expect { bitmap_editor.draw_column(matrix: [], col: 2, row_start: 3, row_end: 6, color: nil) }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'X > col_num' do
+        expect { bitmap_editor.draw_column(matrix: [], col: 6, row_start: 3, row_end: 6, color: 'W') }.to raise_error(Exceptions::ValidationError)
+      end
+    end
+  end
 end

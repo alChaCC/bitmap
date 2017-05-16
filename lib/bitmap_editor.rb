@@ -38,4 +38,13 @@ class BitmapEditor
 
     MatrixUtil.set_element(matrix, row, col, color)
   end
+
+  def draw_column(matrix: , col: , row_start: , row_end: , color: )
+    raise Exceptions::ValidationError.new('Please make sure your input is Matrix') unless matrix.is_a?(Matrix)
+    raise Exceptions::ValidationError.new('No color is given') unless color
+    raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row_start >= 1 && col >= 1
+    raise Exceptions::ValidationError.new("#{ 'row is invalid' if row_end > matrix.row_count} + #{ 'col is invalid' if col > matrix.column_count}") unless row_end <= matrix.row_count && col <= matrix.column_count
+
+    MatrixUtil.set_col(matrix, col, row_start, row_end, color)
+  end
 end

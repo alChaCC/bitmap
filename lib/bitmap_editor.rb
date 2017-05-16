@@ -22,4 +22,10 @@ class BitmapEditor
 
     Matrix.zero(row, col)
   end
+
+  def clear_table(matrix)
+    raise Exceptions::ValidationError.new('Please make sure your input is Matrix') unless matrix.is_a?(Matrix)
+
+    Matrix.zero(matrix.row_count, matrix.column_count)
+  end
 end

@@ -111,4 +111,80 @@ RSpec.describe 'BitmapEditor' do
       expect { bitmap_editor.show_table(updated_matrix) }.to output("10101\n01010\n11111\n00000\n11100\n00011\n").to_stdout
     end
   end
+
+  describe 'Run' do
+    let(:current_path) { Dir.pwd }
+
+    it 'normal case' do
+      expect { bitmap_editor.run(current_path + '/examples/show.txt') }.to output("00000\n00ZZZ\nAW000\n0W000\n0W000\n0W000\n").to_stdout
+    end
+
+    it 'normal case - complex' do
+      expected_string = <<-DOC
+00000
+00ZZZ
+AW000
+0W000
+0W000
+0W000
+00000
+00000
+00000
+00000
+00000
+00000
+0V
+00
+V0
+00
+00000000000000000000000000000000000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS0000000000SSS000000000
+0SSSSSSSSSSSS0000000000SSS000000000
+0SSSSSSSSSSSS0000000000SSS000000000
+0SSS000000SSS0000000000SSS000000000
+0SSS000000SSS000000SSSSSSSSSSS00000
+0SSS000000SSS000000SSSSSSSSSSS00000
+00000000000000000000000000000000000
+      DOC
+      expect { bitmap_editor.run(current_path + '/examples/show-complex.txt') }.to output(expected_string).to_stdout
+    end
+
+    it 'error cases' do
+      expected_string = <<-DOC
+#NO_Image
+Line2-ValidationError:No Image is initialized
+Line3-ValidationError:No Image is initialized
+Line4-ValidationError:No Image is initialized
+Line5-ValidationError:No Image is initialized
+Line6-ValidationError:No Image is initialized
+#Pixel(6,6)>col_number
+Line9-ValidationError:col is invalid
+00000
+00ZZZ
+AW000
+0W000
+0W000
+0W000
+#DrawCol:6>col_number
+Line18-ValidationError:col is invalid
+00000
+00ZZZ
+A0000
+00000
+00000
+00000
+#DrawRow:7>row_number
+Line26-ValidationError:row is invalid
+00000
+00000
+AW000
+0W000
+0W000
+0W000
+      DOC
+      expect { bitmap_editor.run(current_path + '/examples/errors.txt') }.to output(expected_string).to_stdout
+    end
+  end
 end

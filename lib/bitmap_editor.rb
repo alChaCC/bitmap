@@ -47,4 +47,13 @@ class BitmapEditor
 
     MatrixUtil.set_col(matrix, col, row_start, row_end, color)
   end
+
+  def draw_row(matrix: , row: , col_start: , col_end: , color: )
+    raise Exceptions::ValidationError.new('Please make sure your input is Matrix') unless matrix.is_a?(Matrix)
+    raise Exceptions::ValidationError.new('No color is given') unless color
+    raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row >= 1 && col_start >= 1
+    raise Exceptions::ValidationError.new("#{ 'row is invalid' if row > matrix.row_count} + #{ 'col is invalid' if col_end > matrix.column_count}") unless row <= matrix.row_count && col_end <= matrix.column_count
+
+    MatrixUtil.set_row(matrix, row, col_start, col_end, color)
+  end
 end

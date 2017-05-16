@@ -76,4 +76,32 @@ RSpec.describe 'BitmapEditor' do
       end
     end
   end
+
+  describe 'H X1 X2 Y C - Draw a horizontal segment of colour C in row Y between columns X1 and X2 (inclusive).' do
+    it 'H 3 5 2 Z' do
+      expect(bitmap_editor.draw_row(matrix: matrix, row: 2, col_start: 3, col_end: 5, color: 'Z')).to eq(Matrix.rows([[0, 0, 0, 0, 0], [0, 0, "Z", "Z", "Z"], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]))
+    end
+
+    context 'raise Exceptions::ValidationError' do
+      it 'when input is not Matrix' do
+        expect { bitmap_editor.draw_row(matrix: '', row: 2, col_start: 3, col_end: 5, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when col_start < 1' do
+        expect { bitmap_editor.draw_row(matrix: matrix, row: 2, col_start: 0, col_end: 5, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when col_end > 5' do
+        expect { bitmap_editor.draw_row(matrix: '', row: 2, col_start: 3, col_end: 6, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'when color is nil' do
+        expect { bitmap_editor.draw_row(matrix: '', row: 2, col_start: 3, col_end: 5, color: nil) }.to raise_error(Exceptions::ValidationError)
+      end
+
+      it 'Y > row_num' do
+        expect { bitmap_editor.draw_row(matrix: '', row: 7, col_start: 3, col_end: 5, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+      end
+    end
+  end
 end

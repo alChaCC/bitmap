@@ -14,5 +14,13 @@ class MatrixUtil
       end
       Matrix.rows(arr)
     end
+
+    def set_row(matrix, row, col_start, col_end, value)
+      arr = matrix.to_a
+      arr[row - 1] = arr[row - 1].each_with_index.map do |sub, index|
+        ((index + 1 >= col_start) && (index + 1 <= col_end)) ? value : sub
+      end
+      Matrix.rows(arr)
+    end
   end
 end

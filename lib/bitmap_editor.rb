@@ -1,3 +1,6 @@
+require 'exceptions'
+require 'Matrix'
+
 class BitmapEditor
 
   def run(file)
@@ -12,5 +15,11 @@ class BitmapEditor
           puts 'unrecognised command :('
       end
     end
+  end
+
+  def create_table(row:, col:)
+    raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row >= 1 && col >= 1
+
+    Matrix.zero(row, col)
   end
 end

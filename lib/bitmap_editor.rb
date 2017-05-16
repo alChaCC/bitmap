@@ -8,23 +8,29 @@ class BitmapEditor
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
     matrix = nil
-    File.open(file).each do |line|
-      line = line.chomp.split(' ')
-      case line.first
-      when 'I'
-        matrix = create_table(row: line[2].to_i, col: line[1].to_i)
-      when 'C'
-        matrix = clear_table(matrix)
-      when 'L'
-        matrix = draw_pixel(matrix: matrix, row: line[2].to_i, col: line[1].to_i, color: line[3])
-      when 'V'
-        matrix = draw_column(matrix: matrix, col: line[1].to_i, row_start: line[2].to_i, row_end: line[3].to_i, color: line[4])
-      when 'H'
-        matrix = draw_row(matrix: matrix, row: line[3].to_i, col_start: line[1].to_i, col_end: line[2].to_i, color: line[4])
-      when 'S'
-        show_table(matrix)
-      else
-        puts 'unrecognised command :('
+    File.open(file).each_with_index do |line, index|
+      begin
+        line = line.chomp.split(' ')
+        case line.first
+        when 'I'
+          matrix = create_table(row: line[2].to_i, col: line[1].to_i)
+        when 'C'
+          matrix = clear_table(matrix)
+        when 'L'
+          matrix = draw_pixel(matrix: matrix, row: line[2].to_i, col: line[1].to_i, color: line[3])
+        when 'V'
+          matrix = draw_column(matrix: matrix, col: line[1].to_i, row_start: line[2].to_i, row_end: line[3].to_i, color: line[4])
+        when 'H'
+          matrix = draw_row(matrix: matrix, row: line[3].to_i, col_start: line[1].to_i, col_end: line[2].to_i, color: line[4])
+        when 'S'
+          show_table(matrix)
+        else
+          puts line.join
+        end
+      rescue Exceptions::ValidationError => e
+        puts "Line#{index+1}-" + e.instance_variable_get(:@title) + ':' + e.message
+      rescue
+        puts "Something wrong...."
       end
     end
   end
@@ -78,11 +84,11 @@ class BitmapEditor
 
   def check_row_and_col(matrix, row_start, row_end, col_start, col_end)
     raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row_start >= 1 && col_start >= 1
-    raise Exceptions::ValidationError.new("#{ 'row is invalid' if row_end > matrix.row_count} + #{ 'col is invalid' if col_end > matrix.column_count}") unless row_end <= matrix.row_count && col_end <= matrix.column_count
+    raise Exceptions::ValidationError.new("#{ 'row is invalid' if row_end > matrix.row_count}" + "#{ 'col is invalid' if col_end > matrix.column_count}") unless row_end <= matrix.row_count && col_end <= matrix.column_count
   end
 
   def check_is_matrix(matrix)
-    raise Exceptions::ValidationError.new('Please make sure your input is Matrix') unless matrix.is_a?(Matrix)
+    raise Exceptions::ValidationError.new('No Image is initialized') unless matrix.is_a?(Matrix)
   end
 
   def check_color(color)

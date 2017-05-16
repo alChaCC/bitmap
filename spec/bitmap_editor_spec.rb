@@ -104,4 +104,11 @@ RSpec.describe 'BitmapEditor' do
       end
     end
   end
+
+  describe 'S - Show the contents of the current image' do
+    it 'S' do
+      updated_matrix = Matrix.rows([[1, 0, 1, 0, 1], [0, 1, 0, 1, 0], [1, 1, 1, 1, 1], [0, 0, 0, 0, 0], [1, 1, 1, 0, 0], [0, 0, 0, 1, 1]])
+      expect { bitmap_editor.show_table(updated_matrix) }.to output("10101\n01010\n11111\n00000\n11100\n00011\n").to_stdout
+    end
+  end
 end

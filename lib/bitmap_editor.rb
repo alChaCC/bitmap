@@ -56,4 +56,10 @@ class BitmapEditor
 
     MatrixUtil.set_row(matrix, row, col_start, col_end, color)
   end
+
+  def show_table(matrix)
+    raise Exceptions::ValidationError.new('Please make sure your input is Matrix') unless matrix.is_a?(Matrix)
+
+    matrix.to_a.each { |a| puts a.join }
+  end
 end

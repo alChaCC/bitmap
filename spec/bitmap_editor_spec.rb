@@ -111,4 +111,12 @@ RSpec.describe 'BitmapEditor' do
       expect { bitmap_editor.show_table(updated_matrix) }.to output("10101\n01010\n11111\n00000\n11100\n00011\n").to_stdout
     end
   end
+
+  describe 'Run' do
+    let(:current_path) { Dir.pwd }
+
+    it 'normal case' do
+      expect { bitmap_editor.run(current_path + '/examples/show.txt') }.to output("00000\n00ZZZ\nAW000\n0W000\n0W000\n0W000\n").to_stdout
+    end
+  end
 end

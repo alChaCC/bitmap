@@ -1,19 +1,30 @@
-require 'exceptions'
+require_relative 'exceptions'
+require_relative 'matrix_util'
 require 'Matrix'
-require 'matrix_util'
+require 'pry'
 
 class BitmapEditor
 
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
-
+    matrix = nil
     File.open(file).each do |line|
-      line = line.chomp
-      case line
+      line = line.chomp.split(' ')
+      case line.first
+      when 'I'
+        matrix = create_table(row: line[2].to_i, col: line[1].to_i)
+      when 'C'
+        matrix = clear_table(matrix)
+      when 'L'
+        matrix = draw_pixel(matrix: matrix, row: line[2].to_i, col: line[1].to_i, color: line[3])
+      when 'V'
+        matrix = draw_column(matrix: matrix, col: line[1].to_i, row_start: line[2].to_i, row_end: line[3].to_i, color: line[4])
+      when 'H'
+        matrix = draw_row(matrix: matrix, row: line[3].to_i, col_start: line[1].to_i, col_end: line[2].to_i, color: line[4])
       when 'S'
-          puts "There is no image"
+        show_table(matrix)
       else
-          puts 'unrecognised command :('
+        puts 'unrecognised command :('
       end
     end
   end

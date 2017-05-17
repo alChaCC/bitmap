@@ -43,6 +43,10 @@ RSpec.describe 'BitmapEditor' do
         expect { bitmap_editor.draw_pixel(matrix: matrix, row: 3, col: 1, color: nil) }.to raise_error(Exceptions::ValidationError)
       end
 
+      it 'when color is not string or integer' do
+        expect { bitmap_editor.draw_pixel(matrix: matrix, row: 3, col: 1, color: []) }.to raise_error(Exceptions::ValidationError)
+      end
+
       it 'X > col_num' do
         expect { bitmap_editor.draw_pixel(matrix: matrix, row: 7, col: 1, color: 'A') }.to raise_error(Exceptions::ValidationError)
       end

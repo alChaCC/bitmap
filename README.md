@@ -50,3 +50,8 @@ Please submit a fully completed answer within the time allowed. Please provide s
 ## Running
 
 `>bin/bitmap_editor examples/show.txt`
+
+## Doc
+
+`yard`
+`yard server —reload`

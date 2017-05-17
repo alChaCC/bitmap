@@ -4,7 +4,12 @@ require 'Matrix'
 require 'pry'
 
 class BitmapEditor
+# Class to create bitmap
 
+  # Method to parse file and show bitmap
+  #
+  # @param file [String] file path
+  # @return [void]
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
     matrix = nil
@@ -35,36 +40,75 @@ class BitmapEditor
     end
   end
 
+  # Method to create an empty Matrix
+  #
+  # @param row [Integer] matrix's row size
+  # @param col [Integer] matrix's column size
+  # @return [Matrix]
   def create_table(row:, col:)
     raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row >= 1 && col >= 1
 
     Matrix.zero(row, col)
   end
 
+  # Method to clear an existing Matrix
+  # setting all pixels to white (O)
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @return [Matrix]
   def clear_table(matrix)
     check_is_matrix(matrix)
 
     Matrix.zero(matrix.row_count, matrix.column_count)
   end
 
+  # Method to draw the pixel (X,Y) with colour C
+  #
+  # @param matrix [Matrix]  a Matrix object
+  # @param row [Integer]  row position
+  # @param col [Integer] column position
+  # @param color [String, Integer] the color you want to draw
+  # @return [Matrix]
   def draw_pixel(matrix:, row:, col:, color:)
     draw(matrix, row, row, col, col, color) do
       MatrixUtil.set_element(matrix, row, col, color)
     end
   end
 
+  # Method to draw a vertical segment of colour C
+  # in column X between rows Y1 and Y2 (inclusive).
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @param col [Integer] column position
+  # @param row_start [Integer] row start position
+  # @param row_end [Integer] row end position
+  # @param color [String, Integer] the color you want to draw
+  # @return [Matrix]
   def draw_column(matrix: , col: , row_start: , row_end: , color: )
     draw(matrix, row_start, row_end, col, col, color) do
       MatrixUtil.set_col(matrix, col, row_start, row_end, color)
     end
   end
 
+  # Method to draw a horizontal segment of colour C
+  # in row Y between columns X1 and X2 (inclusive).
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @param row [Integer] row position
+  # @param col_start [Integer] col start position
+  # @param col_end [Integer] col end position
+  # @param color [String, Integer] the color you want to draw
+  # @return [Matrix]
   def draw_row(matrix: , row: , col_start: , col_end: , color: )
     draw(matrix, row, row, col_start, col_end, color) do
       MatrixUtil.set_row(matrix, row, col_start, col_end, color)
     end
   end
 
+  # Method to show the contents of the current image
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @return [Matrix]
   def show_table(matrix)
     check_is_matrix(matrix)
 
@@ -74,6 +118,15 @@ class BitmapEditor
 
   private
 
+  # Method to draw
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @param row_start [Integer] row start position
+  # @param row_end [Integer] row end position
+  # @param col_start [Integer] col start position
+  # @param col_end [Integer] col end position
+  # @param color [String, Integer] the color you want to draw
+  # @return [Matrix]
   def draw(matrix, row_start, row_end, col_start, col_end, color, &block)
     check_is_matrix(matrix)
     check_color(color)
@@ -82,16 +135,36 @@ class BitmapEditor
     block.call
   end
 
+  # Method to check row and col
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @param row_start [Integer] row start position
+  # @param row_end [Integer] row end position
+  # @param col_start [Integer] col start position
+  # @param col_end [Integer] col end position
+  # @raise [Exceptions::ValidationError] validation fail
+  # @return [void]
   def check_row_and_col(matrix, row_start, row_end, col_start, col_end)
     raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row_start >= 1 && col_start >= 1
     raise Exceptions::ValidationError.new("#{ 'row is invalid' if row_end > matrix.row_count}" + "#{ 'col is invalid' if col_end > matrix.column_count}") unless row_end <= matrix.row_count && col_end <= matrix.column_count
   end
 
+  # Method to check input is a Matrix
+  #
+  # @param matrix [Matrix] a Matrix object
+  # @raise [Exceptions::ValidationError] validation fail
+  # @return [void]
   def check_is_matrix(matrix)
     raise Exceptions::ValidationError.new('No Image is initialized') unless matrix.is_a?(Matrix)
   end
 
+  # Method to check color is a Matrix
+  #
+  # @param color [String, Integer] the color you want to check
+  # @raise [Exceptions::ValidationError] validation fail
+  # @return [void]
   def check_color(color)
     raise Exceptions::ValidationError.new('No color is given') unless color
+    raise Exceptions::ValidationError.new('Color must be string or integer') unless color.is_a?(Integer) || color.is_a?(String)
   end
 end

@@ -68,11 +68,11 @@ RSpec.describe 'BitmapEditor' do
       end
 
       it 'when color is nil' do
-        expect { bitmap_editor.draw_column(matrix: [], col: 2, row_start: 3, row_end: 6, color: nil) }.to raise_error(Exceptions::ValidationError)
+        expect { bitmap_editor.draw_column(matrix: matrix, col: 2, row_start: 3, row_end: 6, color: nil) }.to raise_error(Exceptions::ValidationError)
       end
 
       it 'X > col_num' do
-        expect { bitmap_editor.draw_column(matrix: [], col: 6, row_start: 3, row_end: 6, color: 'W') }.to raise_error(Exceptions::ValidationError)
+        expect { bitmap_editor.draw_column(matrix: matrix, col: 6, row_start: 3, row_end: 6, color: 'W') }.to raise_error(Exceptions::ValidationError)
       end
     end
   end
@@ -92,15 +92,15 @@ RSpec.describe 'BitmapEditor' do
       end
 
       it 'when col_end > 5' do
-        expect { bitmap_editor.draw_row(matrix: '', row: 2, col_start: 3, col_end: 6, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+        expect { bitmap_editor.draw_row(matrix: matrix, row: 2, col_start: 3, col_end: 6, color: 'Z') }.to raise_error(Exceptions::ValidationError)
       end
 
       it 'when color is nil' do
-        expect { bitmap_editor.draw_row(matrix: '', row: 2, col_start: 3, col_end: 5, color: nil) }.to raise_error(Exceptions::ValidationError)
+        expect { bitmap_editor.draw_row(matrix: matrix, row: 2, col_start: 3, col_end: 5, color: nil) }.to raise_error(Exceptions::ValidationError)
       end
 
       it 'Y > row_num' do
-        expect { bitmap_editor.draw_row(matrix: '', row: 7, col_start: 3, col_end: 5, color: 'Z') }.to raise_error(Exceptions::ValidationError)
+        expect { bitmap_editor.draw_row(matrix: matrix, row: 7, col_start: 3, col_end: 5, color: 'Z') }.to raise_error(Exceptions::ValidationError)
       end
     end
   end

@@ -17,25 +17,27 @@ class BitmapEditor
       begin
         line = line.chomp.split(' ')
         case line.first
-        when 'I', 'i'
+        when 'I'
           matrix = create_table(row: line[2].to_i, col: line[1].to_i)
-        when 'C', 'c'
+        when 'C'
           matrix = clear_table(matrix)
-        when 'L', 'l'
-          matrix = draw_pixel(matrix: matrix, row: line[2].to_i, col: line[1].to_i, color: line[3])
-        when 'V', 'v'
+        when 'L'
+          matrix = draw_pixel(matrix: matrix, row: line[1].to_i, col: line[2].to_i, color: line[3])
+        when 'V'
           matrix = draw_column(matrix: matrix, col: line[1].to_i, row_start: line[2].to_i, row_end: line[3].to_i, color: line[4])
-        when 'H', 'h'
+        when 'H'
           matrix = draw_row(matrix: matrix, row: line[3].to_i, col_start: line[1].to_i, col_end: line[2].to_i, color: line[4])
-        when 'S', 's'
+        when 'S'
           show_table(matrix)
         else
-          puts line.join
+          Exceptions::ValidationError.new('Unrecognized Input')
         end
       rescue Exceptions::ValidationError => e
         puts "Line#{index+1}-" + e.instance_variable_get(:@title) + ':' + e.message
-      rescue
+        return
+      rescue => e
         puts "Something wrong...."
+        return
       end
     end
   end
@@ -46,9 +48,10 @@ class BitmapEditor
   # @param col [Integer] matrix's column size
   # @return [Matrix]
   def create_table(row:, col:)
+    raise Exceptions::ValidationError.new('Please make sure your rows <= 250 and cols <= 250') unless row <= 250 && col <= 250
     raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row >= 1 && col >= 1
 
-    Matrix.zero(row, col)
+    Matrix.build(row, col) { 'O' }
   end
 
   # Method to clear an existing Matrix
@@ -59,7 +62,7 @@ class BitmapEditor
   def clear_table(matrix)
     check_is_matrix(matrix)
 
-    Matrix.zero(matrix.row_count, matrix.column_count)
+    Matrix.build(matrix.row_count, matrix.column_count) { 'O' }
   end
 
   # Method to draw the pixel (X,Y) with colour C
@@ -145,6 +148,7 @@ class BitmapEditor
   # @raise [Exceptions::ValidationError] validation fail
   # @return [void]
   def check_row_and_col(matrix, row_start, row_end, col_start, col_end)
+    raise Exceptions::ValidationError.new('Please make sure your rows <= 250 and cols <= 250') unless row_end <= 250 && col_end <= 250
     raise Exceptions::ValidationError.new('Please make sure your rows >= 1 and cols >= 1') unless row_start >= 1 && col_start >= 1
     raise Exceptions::ValidationError.new("#{ 'row is invalid' if row_end > matrix.row_count}" + "#{ 'col is invalid' if col_end > matrix.column_count}") unless row_end <= matrix.row_count && col_end <= matrix.column_count
   end
@@ -165,6 +169,7 @@ class BitmapEditor
   # @return [void]
   def check_color(color)
     raise Exceptions::ValidationError.new('No color is given') unless color
-    raise Exceptions::ValidationError.new('Color must be string or integer') unless color.is_a?(Integer) || color.is_a?(String)
+    raise Exceptions::ValidationError.new('Color must be a String') unless color.is_a?(String)
+    raise Exceptions::ValidationError.new('Color must be capital letters') unless color == color.upcase
   end
 end
